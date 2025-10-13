@@ -8,11 +8,11 @@ app.get('/', (_, res) => {
     res.send('Hello World')
 })
 
-app.listen(port,(err) => {
+app.listen(port, async (err) => {
     if(err){
         console.error('Error starting server: ', err)
         process.exit(1)
     }
-    db.sync({force: true})
+    await db.sync({force: true})
     console.log(`Server is running on port ${port}`)
 })

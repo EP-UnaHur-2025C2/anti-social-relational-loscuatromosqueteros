@@ -4,7 +4,7 @@
   "description": "UnaHur anti-social net - Trabajo Práctico",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/main.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gerardo Gonzalez Tulian",
