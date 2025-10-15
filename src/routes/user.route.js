@@ -5,8 +5,9 @@ const {
   findAllUsers,
   findUserByPK,
   createUser,
-  createPost,
-  createPostImages,
+  getPostsFromUser,
+  createPostFromUser,
+  createComment,
 } = require("../controllers/user.controller");
 const { validarUserById } = require("../middlewares/user.middleware");
 
@@ -14,13 +15,13 @@ route.get("/", findAllUsers);
 
 route.get("/:idUser", validarUserById, findUserByPK);
 
-route.get("/:idUser/post",(_, res) => {});
+route.get("/:idUser/posts",getPostsFromUser);
 
 route.post("/", createUser);
 
-route.post("/:idUser/post", createPost); //Aca tambien se crean las imagenes y los tags del post.
+route.post("/:idUser/post",createPostFromUser); //Aca tambien se crean las imagenes y los tags del post.
 
-route.post("/:idUser/:idPost/comentario",(_, res) => {});
+route.post("/:idUser/:idPost/comment",createComment);
 
 //route.delete("/:idUser");
 
