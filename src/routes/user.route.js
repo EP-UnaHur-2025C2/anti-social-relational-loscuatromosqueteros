@@ -2,10 +2,11 @@ const { Router } = require('express');
 const route = Router();
 const { User, Post_Images } = require('../db/models');
 const { findAllUsers, findUserByPK, createUser, createPost,createPostImages } = require('../controllers/user.controller')
+const {validarUserById} = require('../middlewares/user.middleware')
 
 route.get('/', findAllUsers);
 
-route.get('/:idUser', findUserByPK);
+route.get('/:idUser', validarUserById , findUserByPK);
 
 route.post('/', createUser);
 
