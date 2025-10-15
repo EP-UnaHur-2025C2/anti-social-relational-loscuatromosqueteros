@@ -1,43 +1,14 @@
 const { Router } = require('express');
 const route = Router();
-const { User } = require('../db/models');
+const { findAllUsers, findUserByPK, createUser, createPost } = require('../controllers/user.controller')
 
+route.get('/', findAllUsers);
 
+route.get('/:idUser', findUserByPK);
 
-route.get('/', async (req,res) => {
-    //findAllUsers
-    const data = await User.findAll({});
+route.post('/', createUser);
 
-    res.status(200).json(data);
-});
-
-route.get('/:idUser', async (req, res) => {
-    //getUserById
-    const id = req.params.idUser;
-
-    const user = await User.findByPk(id);
-
-    res.status(200).json(user);
-});
-
-route.post('/', async (req, res) => {
-    //createUser
-    const data = req.body;
-    const record = await User.create(data);
-
-    res.status(201).json(record);
-});
-
-route.post('/:idUser/post', async (req, res) => {
-    //createPost
-    const id = req.params.idUser;
-    const data = req.body;
-    const user = await User.findByPk(id);
-
-    const record = await user.createPost(data);
-
-    res.status(201).json(data);
-});
+route.post('/:idUser/post', createPost);
 
 //NO FUNCIONA (hay que pulirlo y mejorarlo, puede que sea diferente a como esta, mañana lo pienso mejor)
 route.post('/:id/post/create-images', async (req, res) => {
