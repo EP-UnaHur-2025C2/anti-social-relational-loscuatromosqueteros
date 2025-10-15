@@ -1,18 +1,27 @@
-const { Router } = require('express');
+const { Router } = require("express");
 const route = Router();
-const { User, Post_Images } = require('../db/models');
-const { findAllUsers, findUserByPK, createUser, createPost,createPostImages } = require('../controllers/user.controller')
-const {validarUserById} = require('../middlewares/user.middleware')
+const { User, Post_Images } = require("../db/models");
+const {
+  findAllUsers,
+  findUserByPK,
+  createUser,
+  createPost,
+  createPostImages,
+} = require("../controllers/user.controller");
+const { validarUserById } = require("../middlewares/user.middleware");
 
-route.get('/', findAllUsers);
+route.get("/", findAllUsers);
 
-route.get('/:idUser', validarUserById , findUserByPK);
+route.get("/:idUser", validarUserById, findUserByPK);
 
-route.post('/', createUser);
+route.get("/:idUser/post",(_, res) => {});
 
-route.post('/:idUser/post', createPost);
+route.post("/", createUser);
 
-//NO FUNCIONA (hay que pulirlo y mejorarlo, puede que sea diferente a como esta, mañana lo pienso mejor)
-route.post('/:idUser/post-images', createPostImages);
+route.post("/:idUser/post", createPost); //Aca tambien se crean las imagenes y los tags del post.
+
+route.post("/:idUser/:idPost/comentario",(_, res) => {});
+
+//route.delete("/:idUser");
 
 module.exports = route;

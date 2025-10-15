@@ -3,11 +3,16 @@ const app = express()
 const port = process.env.PORT || 3000
 const db = require('./db/models')['sequelize']
 
-const userRoute = require('./routes/user.route');
+const userRoute= require('./routes/user.route');
+const postRoute= require('./routes/post.route');
+const tagRoute= require('./routes/tag.route');
 
 app.use(express.json())
 
 app.use('/User', userRoute);
+app.use('/Post', postRoute);
+app.use('/Tag', tagRoute);
+
 
 app.get('/', (_, res) => {
     res.send('Hello World')
