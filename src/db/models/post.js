@@ -23,7 +23,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Post.init({
-    descripcion: {type: DataTypes.STRING, allowNull:false}
+    descripcion: {type: DataTypes.STRING, allowNull:false},
+    fechaDePublicacion: { type: DataTypes.DATEONLY, allowNull:false },
+    tiempo: {
+      type: new DataTypes.VITUAL(DataTypes.NUMBER, ['fechaDePublicacion']),
+      get: function(){
+        return Math.floor( (new Date() - new Date(this.get('fechaDePublicacion'))) / (1000*60*60*24*12) ) 
+      }
+    }
   }, {
     sequelize,
     modelName: 'Post',

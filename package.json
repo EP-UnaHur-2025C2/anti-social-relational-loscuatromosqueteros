@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "express": "^5.1.0",
+    "joi": "^18.0.1",
     "sequelize": "^6.37.7",
     "sqlite3": "^5.1.7"
   }
