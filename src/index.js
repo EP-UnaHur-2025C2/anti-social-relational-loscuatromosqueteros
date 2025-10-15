@@ -9,9 +9,9 @@ const tagRoute= require('./routes/tag.route');
 
 app.use(express.json())
 
-app.use('/User', userRoute);
-app.use('/Post', postRoute);
-app.use('/Tag', tagRoute);
+app.use('/user', userRoute);
+app.use('/post', postRoute);
+app.use('/tag', tagRoute);
 
 
 app.get('/', (_, res) => {
