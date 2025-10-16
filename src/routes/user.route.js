@@ -9,7 +9,7 @@ const {
   createPostFromUser,
   createComment,
 } = require("../controllers/user.controller");
-const { validarUserById } = require("../middlewares/user.middleware");
+const { validarUserById, validarSchemaUser } = require("../middlewares/user.middleware");
 
 route.get("/", findAllUsers);
 
@@ -17,7 +17,7 @@ route.get("/:idUser", validarUserById, findUserByPK);
 
 route.get("/:idUser/posts",getPostsFromUser);
 
-route.post("/", createUser);
+route.post("/", validarSchemaUser, createUser);
 
 route.post("/:idUser/post",createPostFromUser); //Aca tambien se crean las imagenes y los tags del post.
 
