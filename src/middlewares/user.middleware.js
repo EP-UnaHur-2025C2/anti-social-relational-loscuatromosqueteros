@@ -6,13 +6,6 @@ const validateSchema = require('./validateSchema.middleware');
 
 const validarUserById = validarByld(User);
 
-const validarSchemaUser = (req,res,next)=>{
-   const {error,_} = genericSchemaValidator(userSchema,req.body)
-   if (error){
-    res.status(400).json({mensaje:"hay errores"});
-    return;
-   }
-   next()
-}
+const validarSchemaUser = validateSchema(userSchema);
 
 module.exports = {validarUserById, validarSchemaUser};
