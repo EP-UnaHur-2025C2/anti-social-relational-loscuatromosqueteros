@@ -69,7 +69,7 @@ const addTags = async (req, res) => {
     });
 }
 
-const creatImages = async (req, res) => {
+const createImages = async (req, res) => {
     const id = req.params.idPost;
     const data = req.body;
     const post = await Post.findByPk(id);
@@ -87,8 +87,8 @@ const creatImages = async (req, res) => {
 
     res.status(201).json({
         ...post.dataValues,
-        images: await post.getPost_Images({ joinTableAttributes: [] })
+        images: await post.getPost_Images({ joinTableAttributes: [] })//tal vez no es necesario
     });
 }
 
-module.exports = { findAllPost, findPostByPK, getCommentFromPost, getTagsFromPost, getUserFromPost, addTags, creatImages };
+module.exports = { findAllPost, findPostByPK, getCommentFromPost, getTagsFromPost, getUserFromPost, addTags, createImages };

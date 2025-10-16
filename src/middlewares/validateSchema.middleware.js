@@ -1,10 +1,16 @@
+const genericSchemaValidator = require("../schemas/genericSchemaValidator");
+
 const validateSchema = (schema) => (req, res, next) => {
-  const { error } = schema.validate(req.body, { abortEarly: false });
+  const {error} = genericSchemaValidator(schema,req.body)
 
   if (error) {
     return res.status(400).json({
-      message: "Error de validación",
-      details: error.details.map((err) => err.message),
+      errores: error.details.map((err) => {
+        return {
+          atributo: err.path[0],
+          detalle: err.message
+        }
+      }),
     });
   }
 

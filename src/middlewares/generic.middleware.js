@@ -1,4 +1,4 @@
-const validarByld = (modelo) => {
+const validarById = (modelo) => {
   return async (req, res, next) => {
     const idParamName = Object.keys(req.params).find(key => key.toLowerCase().includes('id'));
 
@@ -17,4 +17,4 @@ const validarByld = (modelo) => {
   };
 };
 
-module.exports = validarByld;
+module.exports = validarById;
