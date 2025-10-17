@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     tiempo: {
       type: new DataTypes.VIRTUAL(DataTypes.NUMBER, ['createdAt']),
       get: function(){
-        return Math.floor( (new Date() - new Date(this.get('createdAt'))) / (1000*60*60*24*12) ) 
+        return Math.floor( (new Date() - new Date(this.get('createdAt'))) / (1000*60*60*24*30) ) 
       }
     }
   }, {

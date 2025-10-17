@@ -28,7 +28,7 @@ const getPostFromTag = async (req,res) => {
 
 const createTag = async (req,res) => {
     const record = req.body;
-    const tag = Tag.create(record);
+    const tag = await Tag.create(record);
 
     res.status(201).json(tag);
 }
