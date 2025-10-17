@@ -17,4 +17,17 @@ const validarById = (modelo) => {
   };
 };
 
-module.exports = validarById;
+const existAttribute = (model,attribute) => {
+    return async (req, res, next) => {
+        const value = req.body[attribute];
+        if (value) {
+            const data = await model.findOne({ where: { [attribute]: value } });
+            if (data) {
+                return res.status(406).json({ message: `El ${attribute} ${value} ya está registrado` })
+            }
+        }
+        next()
+    }
+};
+
+module.exports = {validarById,existAttribute};

@@ -1,4 +1,5 @@
 const { User } = require('../db/models');
+const { message } = require('../schemas/user.schema');
 
 const findAllUsers = async (_, res) => {
     const data = await User.findAll({});
@@ -20,7 +21,21 @@ const createUser = async (req, res) => {
 
     res.status(201).json(record);
 }
+const deleteUser = async(req,res)=>{
+    const user = await User.findByPk(req.params.idUser);
+    await user.destroy();
 
+    res.status(204).send();
+}
+const updateUser = async(req,res)=>{
+    const data = req.body;
+    const user = await User.findByPk(req.params.idUser);
+    jane.name = 'Ada';
+    // the name is still "Jane" in the database
+    await jane.save();
+
+    res.status(204).send();
+}
 const getPostsFromUser = async (req, res) => {
     const id = req.params.idUser;
 
@@ -73,4 +88,4 @@ const createComment = async (req, res) => {
     });
     res.status(201).json(comment);
 }
-module.exports = { findAllUsers, findUserByPK, createUser, getPostsFromUser, createPostFromUser, createComment };  
+module.exports = { findAllUsers, findUserByPK, createUser,deleteUser,updateUser, getPostsFromUser, createPostFromUser, createComment };  
