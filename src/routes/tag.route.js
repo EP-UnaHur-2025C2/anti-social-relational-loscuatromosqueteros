@@ -1,14 +1,13 @@
 const { Router } = require("express");
 const route = Router();
+const { findAllTags, findTagByPK, getPostFromTag, createTag } = require("../controllers/tag.controller");
 
-route.get("/",(_, res) => {});
+route.get("/", findAllTags);
 
-route.get("/:idTag",(_, res) => {});
+route.get("/:idTag", findTagByPK);
 
-route.get("/:idTag/posts",(_, res) => {});
+route.get("/:idTag/posts", getPostFromTag);
 
-route.post("/",(_, res) => {});
-
-//route.delete("/:idTag")
+route.post("/", createTag);
 
 module.exports = route;

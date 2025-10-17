@@ -27,7 +27,7 @@ route.post("/", validarSchemaUser, existAttribute(User,"nickName") ,createUser);
 //validar id, validar que el post cumpla el esquema
 route.post("/:idUser/post",validarById(User), createPostFromUser); //Aca tambien se crean las imagenes y los tags del post.
 
-//validar id, validar que el comentario cumpla el esquema
+//validar id, validar que el comentario cumpla el esquema, y que sea obligatorio el idPost
 route.post("/:idUser/comment",validarById(User), createComment);
 
 //validar id

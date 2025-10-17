@@ -1,4 +1,4 @@
-const { Post, Tag, Post_Images } = require('../db/models');
+const { Post, Tag, Post_Images, Post_Tag } = require('../db/models');
 const { Op } = require("sequelize");
 
 const findAllPost = async (req, res) => {
@@ -91,4 +91,18 @@ const createImages = async (req, res) => {
     });
 }
 
-module.exports = { findAllPost, findPostByPK, getCommentFromPost, getTagsFromPost, getUserFromPost, addTags, createImages };
+
+const deletePost = async(req,res)=>{
+    const post = await Post.findByPk(req.params.idPost);
+
+    const postTag = await post.getTags();
+    if(!postTag){
+        await Post_Tag.destroy({ where: {PostId: post.postId} });
+    }
+
+    await post.destroy();
+
+    res.status(204).send();
+}
+
+module.exports = { findAllPost, findPostByPK, getCommentFromPost, getTagsFromPost, getUserFromPost, addTags, createImages, deletePost  };

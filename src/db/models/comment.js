@@ -16,11 +16,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Comment.init({
     comentario: {type: DataTypes.STRING, allowNull:false},
-    fechaDePublicacion: { type: DataTypes.DATEONLY, allowNull:false },
     tiempo: {
-      type: new DataTypes.VIRTUAL(DataTypes.NUMBER, ['fechaDePublicacion']),
+      type: new DataTypes.VIRTUAL(DataTypes.NUMBER, ['createdAt']),
       get: function(){
-        return Math.floor( (new Date() - new Date(this.get('fechaDePublicacion'))) / (1000*60*60*24*12) ) 
+        return Math.floor( (new Date() - new Date(this.get('createdAt'))) / (1000*60*60*24*12) ) 
       }
     }
   }, {

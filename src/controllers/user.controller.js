@@ -76,8 +76,8 @@ const createPostFromUser = async (req, res) => {
 }
 const createComment = async (req, res) => {
     const iduser = req.params.idUser;
-    const idpost = req.params.idPost;
     const data = req.body;
+    const idpost = data.idPost;
 
     const user = await User.findByPk(iduser);
 
