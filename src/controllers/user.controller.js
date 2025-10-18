@@ -30,11 +30,19 @@ const deleteUser = async(req,res)=>{
 const updateUserNickName = async(req,res)=>{
     const data = req.body;
     const user = await User.findByPk(req.params.idUser);
-    jane.name = 'Ada';
+    user.nickName = data.nickName
     // the name is still "Jane" in the database
-    await jane.save();
+    await user.save();
 
-    res.status(204).send();
+    res.status(204).json(user);
+}
+
+const updateUserEmail = async(req,res)=>{
+    const data = req.body;
+    const user = await User.findByPk(req.params.idUser);
+    user.email = data.email;
+    await user.save()
+    res.status(204).send(user)
 }
 
 const updateUserName = async (req,res) => {
@@ -98,4 +106,4 @@ const createComment = async (req, res) => {
     });
     res.status(201).json(comment);
 }
-module.exports = { findAllUsers, findUserByPK, createUser,deleteUser,updateUserName, getPostsFromUser, createPostFromUser, createComment };  
+module.exports = { findAllUsers, findUserByPK, createUser,deleteUser,updateUserName, getPostsFromUser, createPostFromUser, createComment, updateUserNickName, updateUserEmail };  
