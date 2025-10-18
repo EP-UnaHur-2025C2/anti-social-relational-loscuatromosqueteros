@@ -14,7 +14,8 @@ const {
   updateUserEmail
 } = require("../controllers/user.controller");
 const { validarSchemaUser } = require("../middlewares/user.middleware");
-const {validarById,existAttribute} = require("../middlewares/generic.middleware");
+const {validarById,existAttribute, validarPorBody} = require("../middlewares/generic.middleware");
+const { validarSchemaComment } = require("../middlewares/comment.middleware");
 
 route.get("/", findAllUsers);
 
@@ -31,7 +32,7 @@ route.post("/", validarSchemaUser, existAttribute(User,"nickName") ,createUser);
 route.post("/:idUser/post",validarById(User), createPostFromUser); //Aca tambien se crean las imagenes y los tags del post.
 
 //validar id, validar que el comentario cumpla el esquema, y que sea obligatorio el idPost
-route.post("/:idUser/comment",validarById(User), createComment);
+route.post("/:idUser/comment",validarById(User), validarSchemaComment, validarPorBody, createComment);
 
 //validar id
 route.delete("/:idUser",validarById(User), deleteUser);

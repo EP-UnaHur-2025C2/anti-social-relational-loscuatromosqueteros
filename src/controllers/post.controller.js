@@ -2,7 +2,18 @@ const { Post, Tag, Post_Images, Post_Tag, User, Comment } = require('../db/model
 const { Op } = require("sequelize");
 
 const findAllPost = async (req, res) => {
-    const data = await Post.findAll({});
+    const data = await Post.findAll({
+        include: [
+            {
+                model: User,
+                attributes: ['nickName']
+            },
+            {
+                model: Post_Images,
+                attributes: ['id', 'urlImg']
+            }
+        ]
+    });
 
     res.status(200).json(data);
 }
@@ -19,6 +30,12 @@ const findPostByPK = async (req, res) => {
             {
                 model: Post_Images,
                 attributes: ['id', 'urlImg']
+            },
+            {
+                model: Tag,
+                as: 'tags',
+                attributes: ['id', 'name'],
+                through: { attributes: [] }
             },
             {
                 model: Comment,
@@ -40,7 +57,14 @@ const getCommentFromPost = async (req, res) => {
     const id = req.params.idPost;
 
     const post = await Post.findByPk(id);
-    const comment = await post.getComments();
+    const comment = await post.getComments({
+        include: [
+            {
+                model: User,
+                attributes: ['nickName']
+            }
+        ]
+    });
 
     res.status(200).json(comment);
 }
