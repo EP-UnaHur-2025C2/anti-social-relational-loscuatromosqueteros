@@ -7,9 +7,10 @@ const comentarioSchema = Joi.object({
     "string.max":"El Comentario tiene que tener como maximo 200 caracteres",
     "any.required":"El atributo Comentario debe existir",
   }),
-  idPost: Joi.number().required().min(1).messages({
+  idPost: Joi.number().integer().required().min(1).messages({
     "any.required":"El atributo idPost debe existir",
     "number.min": "El idPost debe ser positivo",
+    "number.integer": "El idPost tiene que ser un numero entero"
   })
 });
 

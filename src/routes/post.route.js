@@ -8,7 +8,7 @@ route.get("/", findAllPost);
 
 route.get("/:idPost", validarById(Post), findPostByPK);
 
-route.get("/:idPost/comentarios", validarById(Post), getCommentFromPost);
+route.get("/:idPost/comment", validarById(Post), getCommentFromPost);
 
 route.get("/:idPost/tags", validarById(Post), getTagsFromPost);
 

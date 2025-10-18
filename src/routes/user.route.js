@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const route = Router();
-const { User, Post_Images } = require("../db/models");
+const { User, Post } = require("../db/models");
 const {
   findAllUsers,
   findUserByPK,
@@ -32,7 +32,7 @@ route.post("/", validarSchemaUser, existAttribute(User,"nickName") ,createUser);
 route.post("/:idUser/post",validarById(User), createPostFromUser); //Aca tambien se crean las imagenes y los tags del post.
 
 //validar id, validar que el comentario cumpla el esquema, y que sea obligatorio el idPost
-route.post("/:idUser/comment",validarById(User), validarSchemaComment, validarPorBody, createComment);
+route.post("/:idUser/comment",validarById(User), validarSchemaComment, validarPorBody(Post), createComment);
 
 //validar id
 route.delete("/:idUser",validarById(User), deleteUser);

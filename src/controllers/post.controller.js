@@ -97,7 +97,7 @@ const addTags = async (req, res) => {
 
     data.tags.forEach(element => {
         promesas.push(Tag.findOrCreate({
-            where: { tagName: { [Op.eq]: element.tagName } },
+            where: { tagName:  element.tagName  },
             defaults: element,
         }));
     });
