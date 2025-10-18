@@ -27,7 +27,7 @@ const deleteUser = async(req,res)=>{
 
     res.status(204).send();
 }
-const updateUser = async(req,res)=>{
+const updateUserNickName = async(req,res)=>{
     const data = req.body;
     const user = await User.findByPk(req.params.idUser);
     jane.name = 'Ada';
@@ -36,6 +36,16 @@ const updateUser = async(req,res)=>{
 
     res.status(204).send();
 }
+
+const updateUserName = async (req,res) => {
+    const data = req.body;
+    const user = await User.findByPk(req.params.idUser);
+    user.name = data.name;
+
+    await user.save()
+    res.status(204).send(user)
+}
+
 const getPostsFromUser = async (req, res) => {
     const id = req.params.idUser;
 
@@ -88,4 +98,4 @@ const createComment = async (req, res) => {
     });
     res.status(201).json(comment);
 }
-module.exports = { findAllUsers, findUserByPK, createUser,deleteUser,updateUser, getPostsFromUser, createPostFromUser, createComment };  
+module.exports = { findAllUsers, findUserByPK, createUser,deleteUser,updateUserName, getPostsFromUser, createPostFromUser, createComment };  

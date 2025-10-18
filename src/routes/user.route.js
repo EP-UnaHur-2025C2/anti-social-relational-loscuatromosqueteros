@@ -9,6 +9,7 @@ const {
   getPostsFromUser,
   createPostFromUser,
   createComment,
+  updateUserName
 } = require("../controllers/user.controller");
 const { validarSchemaUser } = require("../middlewares/user.middleware");
 const {validarById,existAttribute} = require("../middlewares/generic.middleware");
@@ -32,6 +33,9 @@ route.post("/:idUser/comment",validarById(User), createComment);
 
 //validar id
 route.delete("/:idUser",validarById(User), deleteUser);
+
+//modifica el nombre de usuario, validando que existe
+route.put("/:idUser/name", validarById(User),existAttribute(User,"name") ,updateUserName)
 
 //validar que nickname nuevo no este tomado
 //route.put("/:idUser",updateUser)
