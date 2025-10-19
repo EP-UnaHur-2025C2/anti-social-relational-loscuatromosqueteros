@@ -16,7 +16,7 @@ const swaggerDocument = YAML.parse(file)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use(express.json())
+app.use(express.json());
 
 app.use('/user', userRoute);
 app.use('/post', postRoute);

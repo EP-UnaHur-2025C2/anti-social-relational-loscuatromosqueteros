@@ -7,7 +7,6 @@ const { validarSchemaArrayTag } = require("../middlewares/tag.middleware");
 const { validarSchemaArrayPost_Images } = require("../middlewares/post_images.middleware");
 const { validarSchemaPost } = require("../middlewares/post.middleware");
 const { deleteTagEnPost } = require("../controllers/tag.controller");
-const post_images = require("../db/models/post_images");
 
 route.get("/", findAllPost);
 
@@ -25,7 +24,7 @@ route.post("/:idPost/images", validarById(Post), validarSchemaArrayPost_Images, 
 
 route.delete("/:idPost", validarById(Post), deletePost);
 
-route.delete("/image", validarIdPorBody(post_images), deletePost_Images);
+route.delete("/:idPost/image",validarById(Post), validarIdPorBody(Post_Images), deletePost_Images);
 
 route.delete("/:idPost/tag", validarById(Post), validarIdPorBody(Tag), deleteTagEnPost);
 
