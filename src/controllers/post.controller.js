@@ -15,9 +15,9 @@ const findAllPost = async (req, res) => {
                 model: Comment,
                 required: false,
                 include: [{
-                        model: User,
-                        attributes: ['nickName']
-                    }],
+                    model: User,
+                    attributes: ['nickName']
+                }],
                 order: [['createdAt', 'DESC']],
                 limit: 3
             }
@@ -51,9 +51,9 @@ const findPostByPK = async (req, res) => {
                 model: Comment,
                 required: false,
                 include: [{
-                        model: User,
-                        attributes: ['nickName']
-                    }],
+                    model: User,
+                    attributes: ['nickName']
+                }],
                 order: [['createdAt', 'DESC']],
                 limit: 6
             }
@@ -109,7 +109,7 @@ const addTags = async (req, res) => {
 
     data.tags.forEach(element => {
         promesas.push(Tag.findOrCreate({
-            where: { tagName:  element.tagName  },
+            where: { tagName: element.tagName },
             defaults: element,
         }));
     });
@@ -148,7 +148,7 @@ const createImages = async (req, res) => {
     });
 }
 
-const updatePost = async(req,res)=>{
+const updatePost = async (req, res) => {
     const data = req.body;
     const post = await Post.findByPk(req.params.idPost);
     post.update(data);
@@ -169,5 +169,16 @@ const deletePost = async (req, res) => {
     res.status(204).send();
 }
 
-module.exports = { findAllPost, findPostByPK, getCommentFromPost, getTagsFromPost, 
-    getUserFromPost, addTags, createImages, deletePost, updatePost };
+const deletePost_Images = async (req, res) => {
+    const image = await Post_Images.findByPk(req.body.idImg);
+
+    await image.destroy();
+
+    res.status(204).send();
+}
+
+module.exports = {
+    findAllPost, findPostByPK, getCommentFromPost, getTagsFromPost,
+    getUserFromPost, addTags, createImages, deletePost, updatePost,
+    deletePost_Images
+};

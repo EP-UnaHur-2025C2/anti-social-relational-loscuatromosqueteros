@@ -33,7 +33,7 @@ const existAttribute = (model, attribute) => {
 const validarIdPorBody = (modelo) => {
   return async (req, res, next) => {
     const idBodyName = Object.keys(req.body).find(key => key.toLowerCase().includes('id'));
-
+    
     if (!idBodyName) {
       return res.status(400).json({ error_message: 'No se encontró ningún parámetro de ID en el body.' });
     }
