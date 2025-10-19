@@ -36,9 +36,6 @@ route.post("/:idUser/comment", validarById(User), validarSchemaComment, validarP
 route.delete("/:idUser", validarById(User), deleteUser);
 
 //modifica el nickName, validando que existe
-route.put("/:idUser/nickName", validarById(User), existAttribute(User,"nickName"), validarSchemaUserUpdate, updateUser);
-
-//validar que nickname nuevo no este tomado
-//route.put("/:idUser",updateUser)
+route.put("/:idUser/update", validarById(User), existAttribute(User,"nickName"), validarSchemaUserUpdate, updateUser);
 
 module.exports = route;
