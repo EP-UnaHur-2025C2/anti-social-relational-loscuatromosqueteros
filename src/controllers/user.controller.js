@@ -27,31 +27,12 @@ const deleteUser = async(req,res)=>{
 
     res.status(204).send();
 }
-const updateUserNickName = async(req,res)=>{
+const updateUser = async(req,res)=>{
     const data = req.body;
     const user = await User.findByPk(req.params.idUser);
-    user.nickName = data.nickName
-    // the name is still "Jane" in the database
-    await user.save();
+    user.update(data);
 
-    res.status(204).json(user);
-}
-
-const updateUserEmail = async(req,res)=>{
-    const data = req.body;
-    const user = await User.findByPk(req.params.idUser);
-    user.email = data.email;
-    await user.save()
-    res.status(204).send(user)
-}
-
-const updateUserName = async (req,res) => {
-    const data = req.body;
-    const user = await User.findByPk(req.params.idUser);
-    user.name = data.name;
-
-    await user.save()
-    res.status(204).send(user)
+    res.status(200).json(user);
 }
 
 const getPostsFromUser = async (req, res) => {
@@ -106,4 +87,4 @@ const createComment = async (req, res) => {
     });
     res.status(201).json(comment);
 }
-module.exports = { findAllUsers, findUserByPK, createUser,deleteUser,updateUserName, getPostsFromUser, createPostFromUser, createComment, updateUserNickName, updateUserEmail };  
+module.exports = { findAllUsers, findUserByPK, createUser,deleteUser, updateUser, getPostsFromUser, createPostFromUser, createComment };  

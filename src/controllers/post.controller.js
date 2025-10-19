@@ -12,7 +12,8 @@ const findAllPost = async (req, res) => {
                 model: Post_Images,
                 attributes: ['id', 'urlImg']
             }
-        ]
+        ],
+        order: [['createdAt', 'DESC']]
     });
 
     res.status(200).json(data);
@@ -34,18 +35,18 @@ const findPostByPK = async (req, res) => {
             {
                 model: Tag,
                 as: 'tags',
-                attributes: ['id', 'name'],
+                attributes: ['id', 'tagName'],
                 through: { attributes: [] }
             },
             {
                 model: Comment,
                 required: false,
-                include: [
-                    {
+                include: [{
                         model: User,
                         attributes: ['nickName']
-                    }
-                ]
+                    }],
+                order: [['createdAt', 'DESC']],
+                limit: 3
             }
         ]
     });
@@ -63,7 +64,8 @@ const getCommentFromPost = async (req, res) => {
                 model: User,
                 attributes: ['nickName']
             }
-        ]
+        ],
+        order: [['createdAt', 'DESC']]
     });
 
     res.status(200).json(comment);
@@ -87,6 +89,7 @@ const getUserFromPost = async (req, res) => {
     res.status(200).json(user);
 }
 
+//Ver problema de paralelismo 
 const addTags = async (req, res) => {
     const id = req.params.idPost;
     const post = await Post.findByPk(id);
