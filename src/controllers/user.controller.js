@@ -1,5 +1,4 @@
 const { User } = require('../db/models');
-const { message } = require('../schemas/user.schema');
 
 const findAllUsers = async (_, res) => {
     const data = await User.findAll({});
@@ -73,18 +72,5 @@ const createPostFromUser = async (req, res) => {
 
     res.status(201).json(post);
 }
-const createComment = async (req, res) => {
-    const iduser = req.params.idUser;
-    const data = req.body;
-    const idpost = data.idPost;
 
-    const user = await User.findByPk(iduser);
-
-    const comment = await user.createComment({
-        comentario: data.comentario,
-        PostId: idpost,
-        UserId: iduser
-    });
-    res.status(201).json(comment);
-}
-module.exports = { findAllUsers, findUserByPK, createUser,deleteUser, updateUser, getPostsFromUser, createPostFromUser, createComment };  
+module.exports = { findAllUsers, findUserByPK, createUser,deleteUser, updateUser, getPostsFromUser, createPostFromUser };  

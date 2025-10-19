@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const route = Router();
-const { User, Post } = require("../db/models");
+const { User, Post, Comment } = require("../db/models");
 const {
   findAllUsers,
   findUserByPK,
@@ -8,34 +8,35 @@ const {
   deleteUser,
   getPostsFromUser,
   createPostFromUser,
-  createComment,
   updateUser
 } = require("../controllers/user.controller");
 const { validarSchemaUser, validarSchemaUserUpdate } = require("../middlewares/user.middleware");
-const {validarById,existAttribute, validarPorBody} = require("../middlewares/generic.middleware");
-const { validarSchemaComment } = require("../middlewares/comment.middleware");
+const {validarById,existAttribute, validarIdPorBody} = require("../middlewares/generic.middleware");
+const { validarSchemaComment, validarSchemaUpdateComment } = require("../middlewares/comment.middleware");
+const { validarSchemaPost } = require("../middlewares/post.middleware");
+const { deleteComment, createComment, updateComment } = require("../controllers/comment.controller");
+
 
 route.get("/", findAllUsers);
 
-//validar id
 route.get("/:idUser", validarById(User), findUserByPK);
 
-//validar id
+route.get("/:idUser", validarById(User), findUserByPK);
+
 route.get("/:idUser/posts", validarById(User), getPostsFromUser);
 
-//validar esquema de usuario, validar que el usuario sea unique en el nickName
 route.post("/", validarSchemaUser, existAttribute(User,"nickName") ,createUser);
 
-//validar id, validar que el post cumpla el esquema
-route.post("/:idUser/post", validarById(User), createPostFromUser); //Aca tambien se crean las imagenes y los tags del post.
+route.post("/:idUser/post", validarById(User), validarSchemaPost, createPostFromUser); //Aca tambien se crean las imagenes y los tags del post.
 
-//validar id, validar que el comentario cumpla el esquema, y que sea obligatorio el idPost
-route.post("/:idUser/comment", validarById(User), validarSchemaComment, validarPorBody(Post), createComment);
+route.post("/:idUser/comment", validarById(User), validarSchemaComment, validarIdPorBody(Post), createComment);
 
-//validar id
 route.delete("/:idUser", validarById(User), deleteUser);
 
-//modifica el nickName, validando que existe
-route.put("/:idUser/update", validarById(User), existAttribute(User,"nickName"), validarSchemaUserUpdate, updateUser);
+route.delete("/:idUser/comment",validarById(User), validarIdPorBody(Comment), deleteComment);
+
+route.put("/:idUser", validarById(User), validarSchemaUpdateComment, updateComment);
+
+route.put("/:idUser", validarById(User), existAttribute(User,"nickName"), validarSchemaUserUpdate, updateUser);
 
 module.exports = route;

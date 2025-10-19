@@ -9,4 +9,11 @@ const tagSchema = Joi.object({
   })
 });
 
-module.exports = tagSchema;
+const tagArraySchema = Joi.object({
+  tags: Joi.array().items(tagSchema).required().messages({
+    "any.required": "El array tags debe existir ( aunque sea vacio )",
+    "array.base": "El campo tags debe ser un array valido",
+  }),
+});
+
+module.exports = {tagSchema, tagArraySchema};
