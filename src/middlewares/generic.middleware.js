@@ -30,7 +30,7 @@ const existAttribute = (model, attribute) => {
   }
 };
 
-const validarPorBody = (modelo) => {
+const validarIdPorBody = (modelo) => {
   return async (req, res, next) => {
     const idBodyName = Object.keys(req.body).find(key => key.toLowerCase().includes('id'));
 
@@ -49,4 +49,4 @@ const validarPorBody = (modelo) => {
   };
 };
 
-module.exports = { validarById, existAttribute, validarPorBody };
+module.exports = { validarById, existAttribute, validarIdPorBody };

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const comentarioSchema = Joi.object({
+const commentSchema = Joi.object({
   comentario: Joi.string().min(3).max(200).required().messages({
     "string.empty": "El Comentario no puede ser vacío",
     "string.min": "El Comentario no puede tener menos de 3 caracteres",
@@ -14,4 +14,18 @@ const comentarioSchema = Joi.object({
   })
 });
 
-module.exports = comentarioSchema;
+const commentUpdateSchema = Joi.object({
+  comentario: Joi.string().min(3).max(200).required().messages({
+    "string.empty": "El Comentario no puede ser vacío",
+    "string.min": "El Comentario no puede tener menos de 3 caracteres",
+    "string.max":"El Comentario tiene que tener como maximo 200 caracteres",
+    "any.required":"El atributo Comentario debe existir",
+  }),
+  idComment: Joi.number().integer().required().min(1).messages({
+    "any.required":"El atributo idComment debe existir",
+    "number.min": "El idComment debe ser positivo",
+    "number.integer": "El idComment tiene que ser un numero entero"
+  })
+});
+
+module.exports = {commentSchema , commentUpdateSchema};

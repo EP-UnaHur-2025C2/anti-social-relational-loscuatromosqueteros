@@ -1,5 +1,4 @@
 const { Post, Tag, Post_Images, Post_Tag, User, Comment } = require('../db/models');
-const { Op } = require("sequelize");
 
 const findAllPost = async (req, res) => {
     const data = await Post.findAll({
@@ -11,6 +10,16 @@ const findAllPost = async (req, res) => {
             {
                 model: Post_Images,
                 attributes: ['id', 'urlImg']
+            },
+            {
+                model: Comment,
+                required: false,
+                include: [{
+                        model: User,
+                        attributes: ['nickName']
+                    }],
+                order: [['createdAt', 'DESC']],
+                limit: 3
             }
         ],
         order: [['createdAt', 'DESC']]
@@ -46,7 +55,7 @@ const findPostByPK = async (req, res) => {
                         attributes: ['nickName']
                     }],
                 order: [['createdAt', 'DESC']],
-                limit: 3
+                limit: 6
             }
         ]
     });
@@ -139,6 +148,13 @@ const createImages = async (req, res) => {
     });
 }
 
+const updatePost = async(req,res)=>{
+    const data = req.body;
+    const post = await Post.findByPk(req.params.idPost);
+    post.update(data);
+
+    res.status(200).json(post);
+}
 
 const deletePost = async (req, res) => {
     const post = await Post.findByPk(req.params.idPost);
@@ -153,4 +169,5 @@ const deletePost = async (req, res) => {
     res.status(204).send();
 }
 
-module.exports = { findAllPost, findPostByPK, getCommentFromPost, getTagsFromPost, getUserFromPost, addTags, createImages, deletePost };
+module.exports = { findAllPost, findPostByPK, getCommentFromPost, getTagsFromPost, 
+    getUserFromPost, addTags, createImages, deletePost, updatePost };
