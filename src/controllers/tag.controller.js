@@ -42,4 +42,12 @@ const deleteTagEnPost = async (req, res) => {
     res.status(204).send();
 }
 
-module.exports = { findAllTags, findTagByPK, getPostFromTag, createTag, deleteTagEnPost };
+const deleteTag = async(req,res)=>{
+    const tag = await Tag.findByPk(req.body.idTag);
+    await tag.destroy();
+
+    res.status(204).send();
+}
+
+
+module.exports = { findAllTags, findTagByPK, getPostFromTag, createTag, deleteTagEnPost, deleteTag };
