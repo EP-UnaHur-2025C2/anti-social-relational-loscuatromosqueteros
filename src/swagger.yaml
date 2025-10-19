@@ -1,0 +1,478 @@
+openapi: 3.0.4
+info:
+  title: UnaHur - Red Anti-Social
+  description: API para gestionar usuarios, posts, tags, comentarios e imágenes.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: user
+    description: todo sobre los usuarios
+  - name: post
+    description: todo sobre los post
+  - name: tag
+    description: todo sobre los tags
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      summary: Agregar usuario a la red antisocial
+      description: Crear un nuevo usuario
+      operationId: createUser
+      requestBody:
+        description: Datos del usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Entrada no válida
+        '422':
+          description: Excepción de validación
+    get:
+      tags:
+        - user
+      summary: Obtener todos los usuarios
+      operationId: getUsers
+      responses:
+        '200':
+          description: Lista de usuarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Error en la petición
+
+  /user/{idUser}:
+    parameters:
+      - name: idUser
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - user
+      summary: Obtener usuario por id
+      operationId: getUserById
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Usuario no encontrado
+    put:
+      tags:
+        - user
+      summary: Actualizar usuario
+      operationId: updateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Usuario actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Datos inválidos
+        '404':
+          description: Usuario no encontrado
+    delete:
+      tags:
+        - user
+      summary: Eliminar usuario
+      operationId: deleteUser
+      responses:
+        '204':
+          description: Usuario eliminado
+
+  /user/{idUser}/posts:
+    parameters:
+      - name: idUser
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - user
+      summary: Obtener los posts de un usuario
+      operationId: getUserPosts
+      responses:
+        '200':
+          description: Lista de posts del usuario
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+        '404':
+          description: Usuario no encontrado
+  /user/{idUser}/post:
+    parameters:
+      - name: idUser
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      tags:
+        - user
+      summary: Crear post desde el usuario
+      operationId: getUserPosts
+      responses:
+        '201':
+          description: Post creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Entrada no válida
+        '422':
+          description: Excepción de validación de post
+  /user/{idUser}/comments:
+    parameters:
+      - name: idUser
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      tags:
+        - user
+      summary: Crear comentario desde el usuario
+      operationId: getUserPosts
+      responses:
+        '201':
+          description: Comentario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Entrada no válida
+        '422':
+          description: Excepción de validación de comentario
+  /posts:
+    get:
+      tags:
+        - post
+      summary: Listar posts
+      operationId: listPosts
+      responses:
+        '200':
+          description: Lista de posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+  /posts/{idPost}:
+    parameters:
+      - name: idPost
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - post
+      summary: Obtener post por id
+      operationId: getPostById
+      responses:
+        '200':
+          description: Post encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '404':
+          description: Post no encontrado
+    delete:
+      tags:
+        - post
+      summary: Eliminar post
+      operationId: deletePost
+      responses:
+        '204':
+          description: Post eliminado
+
+  /posts/{idPost}/comments:
+    parameters:
+      - name: idPost
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - post
+      summary: Listar comentarios de un post
+      operationId: listCommentsForPost
+      responses:
+        '200':
+          description: Lista de comentarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '404':
+          description: Post no encontrado
+  /posts/{postId}/images:
+    parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - post
+      summary: Listar imágenes de un post
+      operationId: listImagesForPost
+      responses:
+        '200':
+          description: Lista de imágenes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostImage'
+        '404':
+          description: Post no encontrado
+    post:
+      tags:
+        - post
+      summary: Agregar imagen a un post
+      operationId: addImageToPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostImage'
+      responses:
+        '201':
+          description: Imagen agregada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostImage'
+        '400':
+          description: Datos inválidos
+        '404':
+          description: Post no encontrado
+  /posts/{idPost}/tags:
+      parameters:
+        - name: idPost
+          in: path
+          required: true
+          schema:
+            type: integer
+      get:
+        tags:
+          - post
+        summary: Listar tags de un post
+      post:
+        tags:
+          - post
+        summary: agregar tag a un post
+
+  /tags/{id}/posts:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - tag
+      summary: Listar posts asociados a un tag
+      operationId: listPostsByTag
+      responses:
+        '200':
+          description: Lista de posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+        '404':
+          description: Tag no encontrado
+  /tags:
+    get:
+      tags:
+        - tag
+      summary: Listar tags
+      operationId: listTags
+      responses:
+        '200':
+          description: Lista de tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+        '400':
+          description: Error en la petición
+    post:
+      tags:
+        - tag
+      summary: Agregar un tag
+      operationId: createTag
+      requestBody:
+        description: Datos del tag
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        '201':
+          description: Tag creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '400':
+          description: Entrada no válida
+        '409':
+          description: Tag ya existe
+  /tags/{idTag}:
+    parameters:
+      - name: idTag
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - tag
+      summary: obtener tag
+      operationId: 124124122s
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        nickName:
+          type: string
+          minLength: 3
+          maxLength: 20
+          example: "usuario123"
+        name:
+          type: string
+          minLength: 3
+          maxLength: 20
+          example: "Juan Pérez"
+        email:
+          type: string
+          format: email
+          minLength: 3
+          maxLength: 70
+          pattern: '^[^\\s@]+@[^\\s@]+\\.(com|net)$'  # restringe TLDs a .com/.net
+          example: "juan@dominio.com"
+      required:
+        - nickName
+        - name
+        - email
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        description:
+          type: string
+          minLength: 3
+          example: "Contenido del post"
+        userId:
+          type: integer
+          example: 5
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - description
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        tagName:
+          type: string
+          minLength: 3
+          maxLength: 25
+          example: "javascript"
+      required:
+        - tagName
+    PostImage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        urlImg:
+          type: string
+          format: uri
+          description: URL de la imagen
+          example: "https://example.com/image.jpg"
+      required:
+        - urlImg
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+          readOnly: true
+        comentario:
+          type: string
+          minLength: 3
+          maxLength: 200
+          example: "Muy buen post!"
+        idPost:
+          type: integer
+          minimum: 1
+          example: 5
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - comentario
+        - idPost

@@ -17,6 +17,8 @@
     "express": "^5.1.0",
     "joi": "^18.0.1",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.8.1"
   }
 }
