@@ -4,7 +4,11 @@ info:
   description: API para gestionar usuarios, posts, tags, comentarios e imágenes.
   version: 1.0.0
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:{port}
+    variables:
+      port:
+        default: "3000"
+        description: Puerto donde corre la API
 tags:
   - name: user
     description: todo sobre los usuarios
@@ -20,8 +24,10 @@ paths:
       summary: Obtener todos los usuarios
       operationId: getUsers
       responses:
-        '200':
+        "200":
           description: Lista de usuarios
+        "500":
+          description: Error interno del servidor
     post:
       tags:
         - user
@@ -33,15 +39,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
         required: true
       responses:
-        '201':
+        "201":
           description: Usuario creado
-        '400':
+        "400":
           description: Esquema invalido
-        '406':
+        "406":
           description: El nickname ya esta registrado
+        "500":
+          description: Error interno del servidor
   /user/{idUser}:
     parameters:
       - name: idUser
@@ -55,10 +63,12 @@ paths:
       summary: Obtener usuario por id
       operationId: getUserById
       responses:
-        '200':
+        "200":
           description: Usuario encontrado
-        '404':
+        "404":
           description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
     put:
       tags:
         - user
@@ -69,27 +79,31 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: "#/components/schemas/User"
         required: true
       responses:
-        '200':
+        "200":
           description: Usuario actualizado
-        '400':
+        "400":
           description: Esquema invalido
-        '404':
+        "404":
           description: Usuario no encontrado
-        '406':
+        "406":
           description: El nickname ya esta registrado
+        "500":
+          description: Error interno del servidor
     delete:
       tags:
         - user
       summary: Eliminar usuario
       operationId: deleteUser
       responses:
-        '204':
+        "204":
           description: Usuario eliminado
-        '404':
+        "404":
           description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
   /user/{idUser}/posts:
     parameters:
       - name: idUser
@@ -103,10 +117,12 @@ paths:
       summary: Obtener los posts de un usuario
       operationId: getUserPosts
       responses:
-        '200':
+        "200":
           description: Lista de posts del usuario
-        '404':
+        "404":
           description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
   /user/{idUser}/post:
     parameters:
       - name: idUser
@@ -124,15 +140,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Post'
+              $ref: "#/components/schemas/Post"
         required: true
       responses:
-        '201':
+        "201":
           description: Post creado
-        '400':
+        "400":
           description: Esquema invalido
-        '404':
+        "404":
           description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
   /user/{idUser}/comment:
     parameters:
       - name: idUser
@@ -150,62 +168,148 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Comment'
+              $ref: "#/components/schemas/Comment"
         required: true
       responses:
-        '201':
+        "201":
           description: Comentario creado
-        '400':
+        "400":
           description: Esquema invalido
-        '404':
+        "404":
           description: Usuario o post no encontrado
+        "500":
+          description: Error interno del servidor
     put:
-        tags:
-          - user
-        summary: Modificar comentario desde el usuario
-        operationId: putUserComment
-        requestBody:
-          description: Modificar un comentario
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateComment'
-          required: true
-        responses:
-          '200':
-            description: Comentario modificado
-          '400':
-            description: Esquema invalido
-          '404':
-            description: Usuario o comentario no encontrado
+      tags:
+        - user
+      summary: Modificar comentario desde el usuario
+      operationId: putUserComment
+      requestBody:
+        description: Modificar un comentario
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateComment"
+        required: true
+      responses:
+        "200":
+          description: Comentario modificado
+        "400":
+          description: Esquema invalido
+        "404":
+          description: Usuario o comentario no encontrado
+        "500":
+          description: Error interno del servidor
     delete:
-            tags:
-              - user
-            summary: Borrar comentario desde el usuario
-            operationId: deleteUserComment
-            requestBody:
-              description: Eliminar un comentario
-              content:
-                application/json:
-                  schema:
-                    $ref: '#/components/schemas/DeleteComment'
-              required: true
-            responses:
-              '204':
-                description: Comentario eliminado
-              '404':
-                description: Usuario o comentario no encontrado
-  
-  /posts:
+      tags:
+        - user
+      summary: Borrar comentario desde el usuario
+      operationId: deleteUserComment
+      requestBody:
+        description: Eliminar un comentario
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteComment"
+        required: true
+      responses:
+        "204":
+          description: Comentario eliminado
+        "404":
+          description: Usuario o comentario no encontrado
+        "500":
+          description: Error interno del servidor
+  /user/{idUser}/followed:
+    parameters:
+      - name: idUser
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - user
+      summary: Obtener los seguidos de un usuario
+      operationId: getUserfollowed
+      responses:
+        "200":
+          description: Lista de seguidos de un usuario
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+  /user/{idUser}/followers:
+    parameters:
+      - name: idUser
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - user
+      summary: Obtener los seguidores de un usuario
+      operationId: getUserfollower
+      responses:
+        "200":
+          description: Lista de seguidos de un usuario
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+  /user/{idUser}/follow:
+    parameters:
+      - name: idUser
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      tags:
+        - user
+      summary: Seguir usuario
+      operationId: followUser
+      responses:
+        "201":
+          description: usuario seguido creado
+        "400":
+          description: datos invalidos
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Error interno del servidor
+  /user/{idUser}/unfollow:
+    parameters:
+      - name: idUser
+        in: path
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+        - user
+      summary: Dejar de seguir
+      operationId: unfollow
+      responses:
+        "204":
+          description:  usuario dejado de seguir
+        "404":
+          description: usuario no encontrado
+        "500":
+          description: Error interno del servidor
+
+  /post:
     get:
       tags:
         - post
       summary: Listar posts
       operationId: listPosts
       responses:
-        '200':
+        "200":
           description: Lista de posts
-  /posts/{idPost}:
+        "500":
+          description: Error interno del servidor
+  /post/{idPost}:
     parameters:
       - name: idPost
         in: path
@@ -218,40 +322,46 @@ paths:
       summary: Obtener post por id
       operationId: getPostById
       responses:
-        '200':
+        "200":
           description: Post encontrado
-        '404':
+        "404":
           description: Post no encontrado
+        "500":
+          description: Error interno del servidor
     delete:
       tags:
         - post
       summary: Eliminar post
       operationId: deletePost
       responses:
-        '204':
+        "204":
           description: Post eliminado
-        '404':
-          escription: Post no encontrado
+        "404":
+          description: Post no encontrado
+        "500":
+          description: Error interno del servidor
     put:
-        tags:
-          - post
-        summary: Modificar post
-        operationId: putPost
-        requestBody:
-          description: Modificar un post
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Post'
-          required: true
-        responses:
-          '200':
-            description: Post modificado
-          '400':
-            description: Esquema invalido
-          '404':
-            description: Post no encontrado
-  /posts/{idPost}/comments:
+      tags:
+        - post
+      summary: Modificar post
+      operationId: putPost
+      requestBody:
+        description: Modificar un post
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Post"
+        required: true
+      responses:
+        "200":
+          description: Post modificado
+        "400":
+          description: Esquema invalido
+        "404":
+          description: Post no encontrado
+        "500":
+          description: Error interno del servidor
+  /post/{idPost}/comment:
     parameters:
       - name: idPost
         in: path
@@ -264,13 +374,15 @@ paths:
       summary: Listar comentarios de un post
       operationId: listCommentsForPost
       responses:
-        '200':
+        "200":
           description: Lista de comentarios
-        '404':
+        "404":
           description: Post no encontrado
-  /posts/{isPost}/images:
+        "500":
+          description: Error interno del servidor
+  /post/{idPost}/images:
     parameters:
-      - name: postId
+      - name: idPost
         in: path
         required: true
         schema:
@@ -280,24 +392,35 @@ paths:
         - post
       summary: Agregar imagen a un post
       operationId: addImageToPost
+      requestBody:
+        description: crear una image
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostImage"
+        required: true
       responses:
-        '201':
+        "201":
           description: Imagen agregada
-        '400':
+        "400":
           description: Datos inválidos
-        '404':
+        "404":
           description: Post no encontrado
+        "500":
+          description: Error interno del servidor
     delete:
       tags:
         - post
       summary: Eliminar imagen de post
       operationId: deletePostImage
       responses:
-        '204':
+        "204":
           description: Imagen eliminada
-        '404':
-          escription: Post no encontrado
-  /posts/{idPost}/tags:
+        "404":
+          description: Post no encontrado
+        "500":
+          description: Error interno del servidor
+  /post/{idPost}/tags:
     parameters:
       - name: idPost
         in: path
@@ -310,33 +433,39 @@ paths:
       summary: Listar tags de un post
       operationId: listTagsForPost
       responses:
-        '200':
+        "200":
           description: Lista de Tags
-        '404':
+        "404":
           description: Post no encontrado
+        "500":
+          description: Error interno del servidor
     post:
       tags:
         - post
       summary: Agregar tag a un post
       operationId: addTagToPost
       responses:
-        '201':
+        "201":
           description: Tag agregado
-        '400':
+        "400":
           description: Datos inválidos
-        '404':
+        "404":
           description: Post no encontrado
+        "500":
+          description: Error interno del servidor
     delete:
       tags:
-          - post
+        - post
       summary: Eliminar tag de post
       operationId: deletePostTag
       responses:
-        '204':
+        "204":
           description: Tag eliminado
-        '404':
-          escription: Post no encontrado
-  
+        "404":
+          description: Post no encontrado
+        "500":
+          description: Error interno del servidor
+
   /tag:
     get:
       tags:
@@ -344,32 +473,38 @@ paths:
       summary: Listar tags
       operationId: listTags
       responses:
-        '200':
+        "200":
           description: Lista de tags
-        '400':
+        "400":
           description: Error en la petición
+        "500":
+          description: Error interno del servidor
     post:
       tags:
         - tag
       summary: Agregar un tag
       operationId: createTag
       responses:
-        '201':
+        "201":
           description: Tag creado
-        '400':
+        "400":
           description: Entrada no válida
-        '406':
+        "406":
           description: Tag ya existe
+        "500":
+          description: Error interno del servidor
     delete:
       tags:
         - tag
       summary: Eliminar tag
       operationId: deleteTag
       responses:
-        '204':
+        "204":
           description: Tag eliminado
-        '404':
-          escription: Tag no encontrado
+        "404":
+          description: Tag no encontrado
+        "500":
+          description: Error interno del servidor
   /tag/{idTag}:
     parameters:
       - name: idTag
@@ -383,10 +518,12 @@ paths:
       summary: obtener tag
       operationId: getTag
       responses:
-        '200':
+        "200":
           description: Tag encontrado
-        '404':
+        "404":
           description: Tag no encontrado
+        "500":
+          description: Error interno del servidor
   /tag/{idTag}/posts:
     parameters:
       - name: id
@@ -400,10 +537,12 @@ paths:
       summary: Listar posts asociados a un tag
       operationId: listPostsByTag
       responses:
-        '200':
+        "200":
           description: Lista de posts
-        '404':
+        "404":
           description: Tag no encontrado
+        "500":
+          description: Error interno del servidor
 
 components:
   schemas:
@@ -425,7 +564,7 @@ components:
           format: email
           minLength: 3
           maxLength: 70
-          pattern: '^[^\\s@]+@[^\\s@]+\\.(com|net)$'  # restringe TLDs a .com/.net
+          pattern: '^[^\\s@]+@[^\\s@]+\\.(com|net)$' # restringe TLDs a .com/.net
           example: "juan@dominio.com"
       required:
         - nickName
@@ -443,9 +582,6 @@ components:
     Tag:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
         tagName:
           type: string
           minLength: 3
@@ -456,23 +592,33 @@ components:
     PostImage:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
-        urlImg:
-          type: string
-          format: uri
-          description: URL de la imagen
-          example: "https://example.com/image.jpg"
+        images:
+          type: array
+          description: Array de objetos con la URL de la imagen
+          items:
+            type: object
+            properties:
+              urlImg:
+                type: string
+                format: uri
+                description: URL de la imagen
+                example: "https://example.com/img1.jpg"
+            required:
+              - urlImg
       required:
-        - urlImg
+        - images
+    DeletePostImage:
+      type: object
+      properties:
+        idImg:
+          type: integer
+          minimum: 1
+          example: 5
+      required:
+        - idImg
     Comment:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
-          readOnly: true
         comentario:
           type: string
           minLength: 3
@@ -486,20 +632,20 @@ components:
         - comentario
         - idComment
     UpdateComment:
-          type: object
-          properties:
-            comentario:
-              type: string
-              minLength: 3
-              maxLength: 200
-              example: "Muy mal post"
-            idComment:
-              type: integer
-              minimum: 1
-              example: 5
-          required:
-            - comentario
-            - idComment
+      type: object
+      properties:
+        comentario:
+          type: string
+          minLength: 3
+          maxLength: 200
+          example: "Muy mal post"
+        idComment:
+          type: integer
+          minimum: 1
+          example: 5
+      required:
+        - comentario
+        - idComment
     DeleteComment:
       type: object
       properties:
@@ -509,4 +655,3 @@ components:
           example: 5
       required:
         - idComment
-
