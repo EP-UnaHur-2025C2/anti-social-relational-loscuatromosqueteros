@@ -220,10 +220,6 @@ paths:
       responses:
         '200':
           description: Post encontrado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Post'
         '404':
           description: Post no encontrado
     delete:
@@ -234,7 +230,27 @@ paths:
       responses:
         '204':
           description: Post eliminado
-
+        '404':
+          escription: Post no encontrado
+    put:
+        tags:
+          - post
+        summary: Modificar post
+        operationId: putPost
+        requestBody:
+          description: Modificar un post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          required: true
+        responses:
+          '200':
+            description: Post modificado
+          '400':
+            description: Esquema invalido
+          '404':
+            description: Post no encontrado
   /posts/{idPost}/comments:
     parameters:
       - name: idPost
@@ -250,37 +266,15 @@ paths:
       responses:
         '200':
           description: Lista de comentarios
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Comment'
         '404':
           description: Post no encontrado
-  /posts/{postId}/images:
+  /posts/{isPost}/images:
     parameters:
       - name: postId
         in: path
         required: true
         schema:
           type: integer
-    get:
-      tags:
-        - post
-      summary: Listar imágenes de un post
-      operationId: listImagesForPost
-      responses:
-        '200':
-          description: Lista de imágenes
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PostImage'
-        '404':
-          description: Post no encontrado
     post:
       tags:
         - post
@@ -289,31 +283,111 @@ paths:
       responses:
         '201':
           description: Imagen agregada
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostImage'
         '400':
           description: Datos inválidos
         '404':
           description: Post no encontrado
+    delete:
+      tags:
+        - post
+      summary: Eliminar imagen de post
+      operationId: deletePostImage
+      responses:
+        '204':
+          description: Imagen eliminada
+        '404':
+          escription: Post no encontrado
   /posts/{idPost}/tags:
-      parameters:
-        - name: idPost
-          in: path
-          required: true
-          schema:
-            type: integer
-      get:
-        tags:
+    parameters:
+      - name: idPost
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - post
+      summary: Listar tags de un post
+      operationId: listTagsForPost
+      responses:
+        '200':
+          description: Lista de Tags
+        '404':
+          description: Post no encontrado
+    post:
+      tags:
+        - post
+      summary: Agregar tag a un post
+      operationId: addTagToPost
+      responses:
+        '201':
+          description: Tag agregado
+        '400':
+          description: Datos inválidos
+        '404':
+          description: Post no encontrado
+    delete:
+      tags:
           - post
-        summary: Listar tags de un post
-      post:
-        tags:
-          - post
-        summary: agregar tag a un post
-
-  /tags/{id}/posts:
+      summary: Eliminar tag de post
+      operationId: deletePostTag
+      responses:
+        '204':
+          description: Tag eliminado
+        '404':
+          escription: Post no encontrado
+  
+  /tag:
+    get:
+      tags:
+        - tag
+      summary: Listar tags
+      operationId: listTags
+      responses:
+        '200':
+          description: Lista de tags
+        '400':
+          description: Error en la petición
+    post:
+      tags:
+        - tag
+      summary: Agregar un tag
+      operationId: createTag
+      responses:
+        '201':
+          description: Tag creado
+        '400':
+          description: Entrada no válida
+        '406':
+          description: Tag ya existe
+    delete:
+      tags:
+        - tag
+      summary: Eliminar tag
+      operationId: deleteTag
+      responses:
+        '204':
+          description: Tag eliminado
+        '404':
+          escription: Tag no encontrado
+  /tag/{idTag}:
+    parameters:
+      - name: idTag
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - tag
+      summary: obtener tag
+      operationId: getTag
+      responses:
+        '200':
+          description: Tag encontrado
+        '404':
+          description: Tag no encontrado
+  /tag/{idTag}/posts:
     parameters:
       - name: id
         in: path
@@ -328,59 +402,8 @@ paths:
       responses:
         '200':
           description: Lista de posts
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Post'
         '404':
           description: Tag no encontrado
-  /tags:
-    get:
-      tags:
-        - tag
-      summary: Listar tags
-      operationId: listTags
-      responses:
-        '200':
-          description: Lista de tags
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Tag'
-        '400':
-          description: Error en la petición
-    post:
-      tags:
-        - tag
-      summary: Agregar un tag
-      operationId: createTag
-      responses:
-        '201':
-          description: Tag creado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Tag'
-        '400':
-          description: Entrada no válida
-        '409':
-          description: Tag ya existe
-  /tags/{idTag}:
-    parameters:
-      - name: idTag
-        in: path
-        required: true
-        schema:
-          type: integer
-    get:
-      tags:
-        - tag
-      summary: obtener tag
-      operationId: 124124122s
 
 components:
   schemas:
