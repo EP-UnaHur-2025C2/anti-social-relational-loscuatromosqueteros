@@ -1,6 +1,6 @@
 const { Post, Tag, Post_Images, Post_Tag, User, Comment } = require('../db/models');
 const { Op } = require("sequelize");
-const mesMax = process.env.MaximoMeses || 6
+const mesMax = process.env.MAXIMO_MESES || 6
 
 const findAllPost = async (req, res) => {
     const fechaLimite = new Date();
