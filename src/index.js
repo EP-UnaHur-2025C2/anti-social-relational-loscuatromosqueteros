@@ -18,19 +18,25 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
 
+//Error en sintaxis del Json
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     return res.status(400).json({
       error: "JSON inválido. Verifica la sintaxis del cuerpo de la solicitud."
     });
   }
-  next();
+  next(err);
 });
 
 app.use('/user', userRoute);
 app.use('/post', postRoute);
 app.use('/tag', tagRoute);
 
+//Error gral de servidor
+app.use((err, req, res, next) => {
+  console.error('Error no manejado:', err);
+  res.status(500).json({ error: 'Error interno del servidor.' });
+});
 
 app.get('/', (_, res) => {
     res.send('Hello World')
