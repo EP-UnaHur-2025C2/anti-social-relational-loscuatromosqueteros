@@ -14,30 +14,6 @@ tags:
     description: todo sobre los tags
 paths:
   /user:
-    post:
-      tags:
-        - user
-      summary: Agregar usuario a la red antisocial
-      description: Crear un nuevo usuario
-      operationId: createUser
-      requestBody:
-        description: Datos del usuario
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        '201':
-          description: Usuario creado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Entrada no válida
-        '422':
-          description: Excepción de validación
     get:
       tags:
         - user
@@ -46,15 +22,26 @@ paths:
       responses:
         '200':
           description: Lista de usuarios
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - user
+      summary: Agregar usuario a la red antisocial
+      description: Crear un nuevo usuario
+      operationId: postUser
+      requestBody:
+        description: Crear un nuevo usuario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '201':
+          description: Usuario creado
         '400':
-          description: Error en la petición
-
+          description: Esquema invalido
+        '406':
+          description: El nickname ya esta registrado
   /user/{idUser}:
     parameters:
       - name: idUser
@@ -70,34 +57,29 @@ paths:
       responses:
         '200':
           description: Usuario encontrado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         '404':
           description: Usuario no encontrado
     put:
       tags:
         - user
-      summary: Actualizar usuario
-      operationId: updateUser
+      summary: Actualizar usuario con id
+      operationId: putUser
       requestBody:
-        required: true
+        description: Actualizar usuario
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
+        required: true
       responses:
         '200':
           description: Usuario actualizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
-          description: Datos inválidos
+          description: Esquema invalido
         '404':
           description: Usuario no encontrado
+        '406':
+          description: El nickname ya esta registrado
     delete:
       tags:
         - user
@@ -106,7 +88,8 @@ paths:
       responses:
         '204':
           description: Usuario eliminado
-
+        '404':
+          description: Usuario no encontrado
   /user/{idUser}/posts:
     parameters:
       - name: idUser
@@ -122,12 +105,6 @@ paths:
       responses:
         '200':
           description: Lista de posts del usuario
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Post'
         '404':
           description: Usuario no encontrado
   /user/{idUser}/post:
@@ -141,19 +118,22 @@ paths:
       tags:
         - user
       summary: Crear post desde el usuario
-      operationId: getUserPosts
+      operationId: postUserPosts
+      requestBody:
+        description: Crear un nuevo post
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
       responses:
         '201':
           description: Post creado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
-          description: Entrada no válida
-        '422':
-          description: Excepción de validación de post
-  /user/{idUser}/comments:
+          description: Esquema invalido
+        '404':
+          description: Usuario no encontrado
+  /user/{idUser}/comment:
     parameters:
       - name: idUser
         in: path
@@ -164,18 +144,58 @@ paths:
       tags:
         - user
       summary: Crear comentario desde el usuario
-      operationId: getUserPosts
+      operationId: postUserComment
+      requestBody:
+        description: Crear un nuevo comentario
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        required: true
       responses:
         '201':
           description: Comentario creado
+        '400':
+          description: Esquema invalido
+        '404':
+          description: Usuario o post no encontrado
+    put:
+        tags:
+          - user
+        summary: Modificar comentario desde el usuario
+        operationId: putUserComment
+        requestBody:
+          description: Modificar un comentario
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Entrada no válida
-        '422':
-          description: Excepción de validación de comentario
+                $ref: '#/components/schemas/UpdateComment'
+          required: true
+        responses:
+          '200':
+            description: Comentario modificado
+          '400':
+            description: Esquema invalido
+          '404':
+            description: Usuario o comentario no encontrado
+    delete:
+            tags:
+              - user
+            summary: Borrar comentario desde el usuario
+            operationId: deleteUserComment
+            requestBody:
+              description: Eliminar un comentario
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/DeleteComment'
+              required: true
+            responses:
+              '204':
+                description: Comentario eliminado
+              '404':
+                description: Usuario o comentario no encontrado
+  
   /posts:
     get:
       tags:
@@ -185,12 +205,6 @@ paths:
       responses:
         '200':
           description: Lista de posts
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Post'
   /posts/{idPost}:
     parameters:
       - name: idPost
@@ -272,12 +286,6 @@ paths:
         - post
       summary: Agregar imagen a un post
       operationId: addImageToPost
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostImage'
       responses:
         '201':
           description: Imagen agregada
@@ -350,13 +358,6 @@ paths:
         - tag
       summary: Agregar un tag
       operationId: createTag
-      requestBody:
-        description: Datos del tag
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Tag'
       responses:
         '201':
           description: Tag creado
@@ -410,22 +411,10 @@ components:
     Post:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
-        description:
+        descripcion:
           type: string
           minLength: 3
           example: "Contenido del post"
-        userId:
-          type: integer
-          example: 5
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
       required:
         - description
     Tag:
@@ -470,9 +459,31 @@ components:
           type: integer
           minimum: 1
           example: 5
-        createdAt:
-          type: string
-          format: date-time
       required:
         - comentario
-        - idPost
+        - idComment
+    UpdateComment:
+          type: object
+          properties:
+            comentario:
+              type: string
+              minLength: 3
+              maxLength: 200
+              example: "Muy mal post"
+            idComment:
+              type: integer
+              minimum: 1
+              example: 5
+          required:
+            - comentario
+            - idComment
+    DeleteComment:
+      type: object
+      properties:
+        idComment:
+          type: integer
+          minimum: 1
+          example: 5
+      required:
+        - idComment
+
