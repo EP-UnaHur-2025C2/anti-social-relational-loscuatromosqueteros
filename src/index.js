@@ -1,4 +1,3 @@
-
 const express = require('express')
 const app = express()
 require('dotenv').config();
@@ -35,12 +34,12 @@ app.use('/post', postRoute);
 app.use('/tag', tagRoute);
 
 //Error gral de servidor
-/*
+
 app.use((err, req, res, next) => {
   console.error('Error no manejado:', err);
   res.status(500).json({ error: 'Error interno del servidor.' });
 });
-*/
+
 app.get('/', (_, res) => {
     res.send('Hello World')
 })
