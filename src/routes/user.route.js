@@ -8,7 +8,11 @@ const {
   deleteUser,
   getPostsFromUser,
   createPostFromUser,
-  updateUser
+  updateUser,
+  followUser,
+  unfollow,
+  getFollowed,
+  getFollowers
 } = require("../controllers/user.controller");
 const { validarSchemaUser, validarSchemaUserUpdate } = require("../middlewares/user.middleware");
 const {validarById,existAttribute, validarIdPorBody} = require("../middlewares/generic.middleware");
@@ -39,5 +43,13 @@ route.put("/:idUser/comment", validarById(User), validarSchemaUpdateComment, upd
 
 route.delete("/:idUser/comment",validarById(User), validarIdPorBody(Comment), deleteComment);
 
+
+route.get("/:idUser/followed", validarById(User), getFollowed);
+
+route.get("/:idUser/followers", validarById(User), getFollowers);
+
+route.post("/:idUser/follow", validarById(User), validarIdPorBody(User), followUser);
+
+route.delete("/:idUser/unfollow", validarById(User), validarIdPorBody(User), unfollow);
 
 module.exports = route;

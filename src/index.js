@@ -1,4 +1,4 @@
-require("express-async-errors")
+
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
@@ -34,11 +34,12 @@ app.use('/post', postRoute);
 app.use('/tag', tagRoute);
 
 //Error gral de servidor
+/*
 app.use((err, req, res, next) => {
   console.error('Error no manejado:', err);
   res.status(500).json({ error: 'Error interno del servidor.' });
 });
-
+*/
 app.get('/', (_, res) => {
     res.send('Hello World')
 })
@@ -48,6 +49,6 @@ app.listen(port, async (err) => {
         console.error('Error starting server: ', err)
         process.exit(1)
     }
-    //await db.sync()
+    await db.sync()
     console.log(`Server is running on port ${port}`)
 })

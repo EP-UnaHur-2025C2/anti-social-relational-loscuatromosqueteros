@@ -16,10 +16,13 @@ module.exports = (sequelize, DataTypes) => {
   }
   Comment.init({
     comentario: {type: DataTypes.STRING, allowNull:false},
-    tiempo: {
-      type: new DataTypes.VIRTUAL(DataTypes.NUMBER, ['createdAt']),
+    esVisible: {
+      type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ['createdAt']),
       get: function(){
-        return Math.floor( (new Date() - new Date(this.get('createdAt'))) / (1000*60*60*24*30) ) 
+        const tiempoDePublicacion = Math.floor( (new Date() - new Date(this.get('createdAt'))) / (1000*60*60*24*30) );
+        const mesMax = process.env.MaximoMeses || 6;
+
+        return  mesMax > tiempoDePublicacion;
       }
     }
   }, {

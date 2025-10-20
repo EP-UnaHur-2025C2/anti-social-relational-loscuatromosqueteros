@@ -1,4 +1,4 @@
-const { User } = require('../db/models');
+const { User, UserFollowers } = require('../db/models');
 
 const findAllUsers = async (_, res) => {
     const data = await User.findAll({});
@@ -73,4 +73,53 @@ const createPostFromUser = async (req, res) => {
     res.status(201).json(post);
 }
 
-module.exports = { findAllUsers, findUserByPK, createUser,deleteUser, updateUser, getPostsFromUser, createPostFromUser };  
+const followUser = async (req,res) => {
+    const user = await User.findByPk(req.params.idUser);
+    const userFollowed = await User.findByPk(req.body.idUser);
+
+    user.addFollowing(userFollowed);
+
+    res.status(200).json({
+        ...user.dataValues,
+        newFollowed: userFollowed
+    })
+}
+
+const getFollowed = async (req,res) => {
+    const user = await User.findByPk(req.params.idUser);
+    
+    const followed = await user.getFollowing({ 
+        joinTableAttributes: [],
+        attributes: ['id', 'nickName']
+    });
+
+    res.status(200).json({
+        ...user.dataValues,
+        followed
+    })
+}
+
+const getFollowers = async (req,res) => {
+    const user = await User.findByPk(req.params.idUser);
+    
+    const followers = await user.getFollowers({ 
+        joinTableAttributes: [],
+        attributes: ['id', 'nickName']
+     });
+
+    res.status(200).json({
+        ...user.dataValues,
+        followers
+    })
+}
+
+const unfollow = async (req,res) => {
+    const user = await User.findByPk(req.params.idUser);
+    const userFollowed = await User.findByPk(req.body.idUser);
+
+    user.removeFollowing(userFollowed);
+
+    res.status(204).send();
+}
+
+module.exports = { findAllUsers, findUserByPK, createUser,deleteUser, updateUser, getPostsFromUser, createPostFromUser, followUser, unfollow, getFollowed, getFollowers };  

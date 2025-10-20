@@ -1,6 +1,11 @@
 const { Post, Tag, Post_Images, Post_Tag, User, Comment } = require('../db/models');
+const { Op } = require("sequelize");
+const mesMax = process.env.MaximoMeses || 6
 
 const findAllPost = async (req, res) => {
+    const fechaLimite = new Date();
+    fechaLimite.setMonth(fechaLimite.getMonth() - mesMax);
+
     const data = await Post.findAll({
         include: [
             {
@@ -13,6 +18,7 @@ const findAllPost = async (req, res) => {
             },
             {
                 model: Comment,
+                where: { createdAt: {[Op.gte]: fechaLimite} },
                 required: false,
                 include: [{
                     model: User,
@@ -30,6 +36,9 @@ const findAllPost = async (req, res) => {
 
 const findPostByPK = async (req, res) => {
     const id = req.params.idPost;
+
+    const fechaLimite = new Date();
+    fechaLimite.setMonth(fechaLimite.getMonth() - mesMax);
 
     const post = await Post.findByPk(id, {
         include: [
@@ -49,6 +58,7 @@ const findPostByPK = async (req, res) => {
             },
             {
                 model: Comment,
+                where: { createdAt: {[Op.gte]: fechaLimite} },
                 required: false,
                 include: [{
                     model: User,
@@ -64,10 +74,14 @@ const findPostByPK = async (req, res) => {
 }
 
 const getCommentFromPost = async (req, res) => {
+    const fechaLimite = new Date();
+    fechaLimite.setMonth(fechaLimite.getMonth() - mesMax);
+
     const id = req.params.idPost;
 
     const post = await Post.findByPk(id);
     const comment = await post.getComments({
+        where: { createdAt: {[Op.gte]: fechaLimite} },
         include: [
             {
                 model: User,
