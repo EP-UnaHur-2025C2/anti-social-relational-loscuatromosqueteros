@@ -1,4 +1,6 @@
-const { User, UserFollowers } = require('../db/models');
+const { User, Post_Images, Comment } = require('../db/models');
+const { Op } = require("sequelize");
+const mesMax = process.env.MAXIMO_MESES || 6
 
 const findAllUsers = async (_, res) => {
     const data = await User.findAll({});
@@ -20,13 +22,13 @@ const createUser = async (req, res) => {
 
     res.status(201).json(record);
 }
-const deleteUser = async(req,res)=>{
+const deleteUser = async (req, res) => {
     const user = await User.findByPk(req.params.idUser);
     await user.destroy();
 
     res.status(204).send();
 }
-const updateUser = async(req,res)=>{
+const updateUser = async (req, res) => {
     const data = req.body;
     const user = await User.findByPk(req.params.idUser);
     user.update(data);
@@ -36,9 +38,29 @@ const updateUser = async(req,res)=>{
 
 const getPostsFromUser = async (req, res) => {
     const id = req.params.idUser;
+    const fechaLimite = new Date();
+    fechaLimite.setMonth(fechaLimite.getMonth() - mesMax);
 
     const user = await User.findByPk(id);
-    const posts = await user.getPosts();
+    const posts = await user.getPosts({
+        include: [
+            {
+                model: Post_Images,
+                attributes: ['id', 'urlImg']
+            },
+            {
+                model: Comment,
+                where: { createdAt: { [Op.gte]: fechaLimite } },
+                required: false,
+                include: [{
+                    model: User,
+                    attributes: ['nickName']
+                }],
+                order: [['createdAt', 'DESC']],
+                limit: 3
+            }
+        ]
+    });
 
     res.status(200).json(posts);
 }
@@ -73,7 +95,7 @@ const createPostFromUser = async (req, res) => {
     res.status(201).json(post);
 }
 
-const followUser = async (req,res) => {
+const followUser = async (req, res) => {
     const user = await User.findByPk(req.params.idUser);
     const userFollowed = await User.findByPk(req.body.idUser);
 
@@ -85,10 +107,10 @@ const followUser = async (req,res) => {
     })
 }
 
-const getFollowed = async (req,res) => {
+const getFollowed = async (req, res) => {
     const user = await User.findByPk(req.params.idUser);
-    
-    const followed = await user.getFollowing({ 
+
+    const followed = await user.getFollowing({
         joinTableAttributes: [],
         attributes: ['id', 'nickName']
     });
@@ -99,13 +121,13 @@ const getFollowed = async (req,res) => {
     })
 }
 
-const getFollowers = async (req,res) => {
+const getFollowers = async (req, res) => {
     const user = await User.findByPk(req.params.idUser);
-    
-    const followers = await user.getFollowers({ 
+
+    const followers = await user.getFollowers({
         joinTableAttributes: [],
         attributes: ['id', 'nickName']
-     });
+    });
 
     res.status(200).json({
         ...user.dataValues,
@@ -113,7 +135,7 @@ const getFollowers = async (req,res) => {
     })
 }
 
-const unfollow = async (req,res) => {
+const unfollow = async (req, res) => {
     const user = await User.findByPk(req.params.idUser);
     const userFollowed = await User.findByPk(req.body.idUser);
 
@@ -122,4 +144,4 @@ const unfollow = async (req,res) => {
     res.status(204).send();
 }
 
-module.exports = { findAllUsers, findUserByPK, createUser,deleteUser, updateUser, getPostsFromUser, createPostFromUser, followUser, unfollow, getFollowed, getFollowers };  
+module.exports = { findAllUsers, findUserByPK, createUser, deleteUser, updateUser, getPostsFromUser, createPostFromUser, followUser, unfollow, getFollowed, getFollowers };  

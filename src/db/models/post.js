@@ -27,13 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Post.init({
-    descripcion: {type: DataTypes.STRING, allowNull:false},
-    tiempo: {
-      type: new DataTypes.VIRTUAL(DataTypes.NUMBER, ['createdAt']),
-      get: function(){
-        return Math.floor( (new Date() - new Date(this.get('createdAt'))) / (1000*60*60*24*30) ) 
-      }
-    }
+    descripcion: {type: DataTypes.STRING, allowNull:false}
   }, {
     sequelize,
     modelName: 'Post',
