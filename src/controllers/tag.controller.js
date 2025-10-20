@@ -18,7 +18,7 @@ const getPostFromTag = async (req, res) => {
     const id = req.params.idTag;
     const tag = await Tag.findByPk(id);
 
-    const post = tag.getPosts({ joinTableAttributes: [] });
+    const post = await tag.getPosts({ joinTableAttributes: [] });
 
     res.status(200).json({
         ...tag.dataValues,
