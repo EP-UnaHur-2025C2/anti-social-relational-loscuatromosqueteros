@@ -269,9 +269,16 @@ paths:
         - user
       summary: Seguir usuario
       operationId: followUser
+      requestBody:
+        description: Seguir un usuario
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowUser"
+        required: true
       responses:
-        "201":
-          description: usuario seguido creado
+        "200":
+          description: usuario seguido correctamente
         "400":
           description: datos invalidos
         "404":
@@ -290,6 +297,13 @@ paths:
         - user
       summary: Dejar de seguir
       operationId: unfollow
+      requestBody:
+        description: Seguir un usuario
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FollowUser"
+        required: true
       responses:
         "204":
           description:  usuario dejado de seguir
@@ -380,7 +394,7 @@ paths:
           description: Post no encontrado
         "500":
           description: Error interno del servidor
-  /post/{idPost}/images:
+  /post/{idPost}/image:
     parameters:
       - name: idPost
         in: path
@@ -413,6 +427,13 @@ paths:
         - post
       summary: Eliminar imagen de post
       operationId: deletePostImage
+      requestBody:
+        description: crear una image
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeletePostImage"
+        required: true
       responses:
         "204":
           description: Imagen eliminada
@@ -444,6 +465,13 @@ paths:
         - post
       summary: Agregar tag a un post
       operationId: addTagToPost
+      requestBody:
+        description: agregar o crear un lista de array
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tags"
+        required: true
       responses:
         "201":
           description: Tag agregado
@@ -453,19 +481,32 @@ paths:
           description: Post no encontrado
         "500":
           description: Error interno del servidor
+  /post/{idPost}/tag:
+    parameters:
+        - name: idPost
+          in: path
+          required: true
+          schema:
+            type: integer
     delete:
-      tags:
-        - post
-      summary: Eliminar tag de post
-      operationId: deletePostTag
-      responses:
-        "204":
-          description: Tag eliminado
-        "404":
-          description: Post no encontrado
-        "500":
-          description: Error interno del servidor
-
+        tags:
+          - post
+        summary: Eliminar tag de post
+        operationId: deletePostTag
+        requestBody:
+          description: eliminar un tag del post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteTag"
+          required: true
+        responses:
+          "204":
+            description: Tag eliminado
+          "404":
+            description: Post no encontrado
+          "500":
+            description: Error interno del servidor
   /tag:
     get:
       tags:
@@ -484,6 +525,18 @@ paths:
         - tag
       summary: Agregar un tag
       operationId: createTag
+      requestBody:
+        description: crear un tag
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddTag"
+      createTag:
+        description: eliminar un tag del post
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteTag"
       responses:
         "201":
           description: Tag creado
@@ -498,6 +551,13 @@ paths:
         - tag
       summary: Eliminar tag
       operationId: deleteTag
+      requestBody:
+        description: eliminar un tag del post
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteTag"
+        required: true
       responses:
         "204":
           description: Tag eliminado
@@ -579,14 +639,37 @@ components:
           example: "Contenido del post"
       required:
         - description
-    Tag:
+    Tags:
+      type: object
+      properties:
+        tags:
+          type: array
+          description: Array de tags
+          items:
+            type: object
+            properties:
+              tagName:
+                type: string
+                description: nombre del tag
+                example: "gatitos"
+            required:
+              - urlImg
+      required:
+        - images
+    DeleteTag:
+      type: object
+      properties:
+        idTag:
+          type: integer
+          minimum: 1
+          example: 5
+      required:
+        - idTag
+    AddTag:
       type: object
       properties:
         tagName:
           type: string
-          minLength: 3
-          maxLength: 25
-          example: "javascript"
       required:
         - tagName
     PostImage:
@@ -646,6 +729,15 @@ components:
       required:
         - comentario
         - idComment
+    FollowUser:
+      type: object
+      properties:
+        idUser:
+          type: integer
+          minimum: 1
+          example: 5
+      required:
+        - idUSer
     DeleteComment:
       type: object
       properties:
@@ -655,3 +747,4 @@ components:
           example: 5
       required:
         - idComment
+    
