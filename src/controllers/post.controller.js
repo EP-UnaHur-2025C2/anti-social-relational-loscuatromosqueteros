@@ -31,7 +31,7 @@ const findAllPost = async (req, res) => {
         order: [['createdAt', 'DESC']]
     });
 
-    res.status(200).json(data);
+    res.status(200).json(post);
 }
 
 const findPostByPK = async (req, res) => {

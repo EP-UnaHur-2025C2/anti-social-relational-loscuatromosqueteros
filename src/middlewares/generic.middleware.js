@@ -10,7 +10,7 @@ const validarById = (modelo) => {
     const instance = await modelo.findByPk(id);
 
     if (!instance) {
-      res.status(404).json({ error_message: `El ${modelo.name} ${id} no fue encontrado.` });
+      res.status(404).json({ error_message: `El ${modelo.modelName} ${id} no fue encontrado.` });
       return;
     }
     next();
@@ -21,7 +21,7 @@ const existAttribute = (model, attribute) => {
   return async (req, res, next) => {
     const value = req.body[attribute];
     if (value) {
-      const data = await model.findOne({ where: { [attribute]: value } });
+      const data = await model.findOne({[attribute]: value });
       if (data) {
         return res.status(406).json({ message: `El ${attribute} ${value} ya está registrado` })
       }
@@ -38,7 +38,7 @@ const validarIdPorBody = (modelo) => {
     const instance = await modelo.findByPk(id);
 
     if (!instance) {
-      res.status(404).json({ error_message: `El ${modelo.name} ${id} no fue encontrado.` });
+      res.status(404).json({ error_message: `El ${modelo.modelName} ${id} no fue encontrado.` });
       return;
     }
     next();
